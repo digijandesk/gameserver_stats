@@ -19,6 +19,8 @@ defmodule MeseStatsWeb.Router do
     get "/", PageController, :index
   end
 
+  forward "/api", Absinthe.Plug, schema: MeseStatsWeb.Schema
+
   # Other scopes may use custom stacks.
   # scope "/api", MeseStatsWeb do
   #   pipe_through :api
