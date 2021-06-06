@@ -13,18 +13,14 @@ defmodule MeseStatsWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", MeseStatsWeb do
-    pipe_through :browser
+  scope "/" do
+    pipe_through :api
+    forward "/api", Absinthe.Plug, schema: MeseStatsWeb.Schema
 
-    get "/", PageController, :index
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: MeseStatsWeb.Schema,
+      interface: :simple
   end
-
-  forward "/api", Absinthe.Plug, schema: MeseStatsWeb.Schema
-
-  # Other scopes may use custom stacks.
-  # scope "/api", MeseStatsWeb do
-  #   pipe_through :api
-  # end
 
   # Enables LiveDashboard only for development
   #
