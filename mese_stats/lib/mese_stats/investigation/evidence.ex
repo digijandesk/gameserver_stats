@@ -14,7 +14,9 @@ defmodule MeseStats.Investigation.Evidence do
     field :location, :string
     field :type, :string
 
-    many_to_many :investigations, Investigation, join_through: "investigations_evidence"
+    many_to_many :investigations, Investigation,
+      join_through: "investigations_evidence",
+      unique: true
 
     timestamps()
   end

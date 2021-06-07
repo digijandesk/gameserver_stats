@@ -4,7 +4,15 @@ defmodule MeseStatsWeb.Schema do
   alias Timex
 
   query do
-    field(:investigations, list_of(:investigation))
+    field :investigations, list_of(:investigation) do
+      resolve(fn _, _, _ ->
+        alias MeseStats.{Investigation, Repo}
+
+        investigations = Repo.all(Investigation)
+
+        {:ok, investigations}
+      end)
+    end
   end
 
   object :investigation do
@@ -13,7 +21,21 @@ defmodule MeseStatsWeb.Schema do
     field(:subject, :string)
     field(:opened_on, :date_time)
     field(:closed_on, :date_time)
-    field(:evidence, list_of(:evidence))
+
+    field :evidence, list_of(:evidence) do
+      resolve(fn investigation, _, _ ->
+        import Ecto.Query
+        alias MeseStats.{Evidence, Repo}
+
+        evidence =
+          "investigations_evidence"
+          |> where([ie], ie.investigation_id == ^investigation.id)
+          |> join(:right, [ie], e in Evidence, on: ie.evidence_id == e.id)
+          |> Repo.all()
+
+        {:ok, evidence}
+      end)
+    end
   end
 
   object :evidence do

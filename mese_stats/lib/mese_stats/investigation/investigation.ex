@@ -14,7 +14,7 @@ defmodule MeseStats.Investigation.Investigation do
     field :opened_on, :date
     field :closed_on, :date
 
-    many_to_many :evidence, Evidence, join_through: "investigations_evidence"
+    many_to_many :evidence, Evidence, join_through: "investigations_evidence", unique: true
 
     timestamps()
   end
